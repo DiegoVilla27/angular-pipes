@@ -1,27 +1,60 @@
-# Angularpipes
+# Angular Pipes
+
+How to use Pipes in Angular!
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0.
+Node - Version 20.9.0
+Npm - Version 10.1.0
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server and navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Commits
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Structure for commits:
 
-## Build
+> _`Subject is sentence-case`_ 
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- `feat: Subject`
+- `fix: Subject`
+- `styles: Subject`
+- `docs: Subject`
+- `test: Subject`
+- `refactor: Subject`
 
-## Running unit tests
+## Husky & Lint Staged
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Install & configure Husky (Git Hooks), Lint Staged (Commits Staged Linter), Commit Lint (Conventional Commits) and Prettier (Code Rules)
 
-## Running end-to-end tests
+- `npm i -D husky lint-staged @commitlint/types @commitlint/cli @commitlint/config-conventional prettier`
+- Script and Exec (Once) -> `"prepare": "husky install"` (That will create _`.husky`_ folder in the root)
+- Exec -> `npx eslint --init` (See file _`.eslintrc.json`_ & _`.lintstagedrc`_)
+- (Optional) Script -> `"lint": "eslint ."` (Exec linter)
+- (Optional) Script -> `"lint:fix": "eslint --fix ."` (Fix errors by linter)
+- (Optional) Script -> `"lint:commit": "npx lint-staged"` (Exec linter but only files in staged)
+- (Optional) Script -> `"pretier": "prettier . --write"` (Exec prettier for all files). (Add file _`.prettierrc.json`_ and _`.editorconfig`_)
+- Create _`commitlint.config.ts`_ and configure.
+- Create a git hook to make a commit-msg and thus run a regular expression validator before each commit
+  - `npx husky add .husky/commit-msg 'npx --no -- commitlint --edit ${1}'`
+- Create a git hook to do a pre-commit and this run the lint-staged (prettier and eslint) and test before each commit
+  - Script -> `"test:staged": "git diff --cached --name-only -- '*.spec.ts' | xargs -I {} ng test --include={} --browsers=ChromeHeadless --watch=false"`
+    - `git diff` Show changes in files
+    - `--cached` Only files in staged
+    - `--name-only` Only names of files
+    - `'*.spec.ts'` Only files spec.ts
+    - `|` Redirect before command to after command
+    - `xargs` Take a list of elements and pass like arguments to another command
+    - `-I {}` Save list of elements in {}
+    - `ng test` Exec test
+    - `--include={}` Include save list of elements to testing each
+    - `--browsers=ChromeHeadless` Tests must be proved in browser chrome headless (Exec chrome without GUI)
+    - `--watch=false` Don't open browser window
+  - `npx husky add .husky/pre-commit "npx lint-staged && git diff --cached --name-only -- '*.spec.ts' | xargs -I {} ng test --include={} --browsers=ChromeHeadless --watch=false"`
+- Create a git hook to do a pre-push and this run HERE ANYTHING COMMAND each push
+  - `npx husky add .husky/pre-push "#HERE ANYTHING COMMAND"`
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+> If Husky doesn't work on MacOS, run the command (Within the project): _`chmod ug+x .husky/*`_
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+> Developed By: __`Diego Villa`__. - Website: [https://www.cabuweb.com](https://www.cabuweb.com)
